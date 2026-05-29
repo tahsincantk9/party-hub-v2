@@ -52,7 +52,11 @@ window.joinRoom = function(){
     document.getElementById("roomText").innerText =
         "🏠 Oda: " + roomId;
 
-    /* PLAYER EKLE */
+  window.selectGame = function(game){
+    console.log("GAME SEÇİLDİ:", game);
+} 
+  
+  /* PLAYER EKLE */
 
     push(
         ref(db, "rooms/" + roomId + "/players"),
