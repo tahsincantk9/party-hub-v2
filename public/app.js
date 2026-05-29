@@ -61,7 +61,29 @@ window.joinRoom = function(){
         }
     );
 
-    /* OYUNCULARI DİNLE */
+  window.selectGame = function(game){
+
+    set(
+        ref(db, "rooms/" + roomId + "/game"),
+        game
+    );
+}  
+  
+  onValue(
+    ref(db, "rooms/" + roomId + "/game"),
+    (snapshot) => {
+
+        const game = snapshot.val();
+
+        if(game){
+
+            document.getElementById("turn").innerText =
+                "🎮 Oyun: " + game;
+        }
+    }
+);
+  
+  /* OYUNCULARI DİNLE */
 
     onValue(
         ref(db, "rooms/" + roomId + "/players"),
