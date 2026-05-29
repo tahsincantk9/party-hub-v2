@@ -57,15 +57,12 @@ window.joinRoom = function () {
   });
 
   listenPlayers();
-  listenGame();
+  listenGame(if(game === "tabu"){
+    nextTabu();
+});
   listenTurn();
 };
 
-if(game === "tabu"){
-
-    nextTabu();
-
-}
 
 /* ---------------- PLAYERS ---------------- */
 
@@ -146,6 +143,45 @@ window.nextTurn = function () {
 
   set(ref(db, "rooms/" + roomId + "/turn"), selected);
 };
+
+window.nextTabu = function(){
+
+    const random =
+        tabuWords[Math.floor(Math.random() * tabuWords.length)];
+
+    document.getElementById("gameContent").innerHTML = `
+        <h2>${random.word}</h2>
+        <p>❌ ${random.taboo.join(" • ")}</p>
+    `;
+
+    startTimer();
+}
+
+let timer;
+
+function startTimer(){
+
+    let time = 60;
+
+    clearInterval(timer);
+
+    document.getElementById("timer").innerText = time;
+
+    timer = setInterval(() => {
+
+        time--;
+
+        document.getElementById("timer").innerText = time;
+
+        if(time <= 0){
+
+            clearInterval(timer);
+
+            alert("⏰ Süre Bitti!");
+        }
+
+    },1000);
+}
 
 function listenTurn() {
 
