@@ -79,7 +79,14 @@ function listenPlayers() {
 
 window.selectGame = function (game) {
 
-  set(ref(db, "rooms/" + roomId + "/game"), game);
+  console.log("GAME SEÇİLDİ:", game);
+
+    if(!roomId){
+        console.log("roomId yok!");
+        return;
+    }
+
+    set(ref(db, "rooms/" + roomId + "/game"), game);
 };
 
 /* ---------------- GAME LISTENER ---------------- */
