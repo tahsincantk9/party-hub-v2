@@ -1,189 +1,140 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-getDatabase,
-ref,
-push,
-onValue,
-set
+  getDatabase,
+  ref,
+  push,
+  onValue,
+  set
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 /* FIREBASE CONFIG */
-
 const firebaseConfig = {
-
-  apiKey: "AIzaSyBZNpGv5Yk54JFB_5U6Qr6iNx2PaPrhIFo",
-  authDomain:  "party-hub-90183.firebaseapp.com",
-  databaseURL: "https://party-hub-90183-default-rtdb.europe-west1.firebasedatabase.app/" ,
-  projectId: "party-hub-90183",
-  storageBucket: "party-hub-90183.appspot.com",
-  messagingSenderId:  "230836884321",
-  appId: "1:230836884321:web:81b3eb36d650c18d0d6b20"
-
+  apiKey: "XXX",
+  authDomain: "XXX",
+  databaseURL: "https://YOUR-PROJECT-default-rtdb.firebaseio.com/",
+  projectId: "XXX",
+  storageBucket: "XXX",
+  messagingSenderId: "XXX",
+  appId: "XXX"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-/* VARIABLES */
-
+/* STATE */
 let roomId = "";
 let name = "";
 
-/* JOIN */
+/* ---------------- JOIN ---------------- */
 
-window.joinRoom = function(){
+window.joinRoom = function () {
 
-    roomId =
-        document.getElementById("roomId").value;
+  roomId = document.getElementById("roomId").value;
+  name = document.getElementById("name").value;
 
-    name =
-        document.getElementById("name").value;
+  if (!roomId || !name) {
+    alert("Eksik bilgi");
+    return;
+  }
 
-    if(!roomId || !name){
-        alert("Eksik bilgi");
-        return;
-    }
+  document.getElementById("login").style.display = "none";
+  document.getElementById("app").style.display = "block";
 
-    document.getElementById("login").style.display = "none";
+  document.getElementById("roomText").innerText = "🏠 Oda: " + roomId;
 
-    document.getElementById("app").style.display = "block";
-
-    document.getElementById("roomText").innerText =
-        "🏠 Oda: " + roomId;
-
-  window.selectGame = function(game){
-    console.log("GAME SEÇİLDİ:", game);
-} 
-  
   /* PLAYER EKLE */
+  push(ref(db, "rooms/" + roomId + "/players"), {
+    name: name
+  });
 
-    push(
-        ref(db, "rooms/" + roomId + "/players"),
-        {
-            name: name
-        }
-    );
+  listenPlayers();
+  listenGame();
+  listenTurn();
+};
 
-  window.selectGame = function(game){
+/* ---------------- PLAYERS ---------------- */
 
-    set(
-        ref(db, "rooms/" + roomId + "/game"),
-        game
-    );
-}  
-  
-  onValue(
-    ref(db, "rooms/" + roomId + "/game"),
-    (snapshot) => {
+function listenPlayers() {
+  onValue(ref(db, "rooms/" + roomId + "/players"), (snapshot) => {
 
-        const game = snapshot.val();
+    const data = snapshot.val();
+    const box = document.getElementById("players");
 
-        if(game){
+    box.innerHTML = "";
 
-            document.getElementById("turn").innerText =
-                "🎮 Oyun: " + game;
-        }
+    if (!data) return;
+
+    for (let id in data) {
+
+      const div = document.createElement("div");
+      div.innerText = "👤 " + data[id].name;
+
+      box.appendChild(div);
     }
-);
-
-window.selectGame = function(game){
-
-    set(ref(db, "rooms/" + roomId + "/game"), game);
+  });
 }
-  
+
+/* ---------------- GAME SELECT ---------------- */
+
+window.selectGame = function (game) {
+
+  set(ref(db, "rooms/" + roomId + "/game"), game);
+};
+
+/* ---------------- GAME LISTENER ---------------- */
+
+function listenGame() {
+
   onValue(ref(db, "rooms/" + roomId + "/game"), (snapshot) => {
 
     const game = snapshot.val();
 
-    if(!game) return;
+    if (!game) return;
+
+    document.getElementById("gameTitle").innerText = "🎮 " + game;
 
     document.getElementById("login").style.display = "none";
     document.getElementById("app").style.display = "none";
     document.getElementById("gameScreen").style.display = "block";
 
-    document.getElementById("gameTitle").innerText = "🎮 " + game;
-    document.getElementById("gameContent").innerText = "Oyun başladı!";
-});
-  
-  /* OYUNCULARI DİNLE */
-
-    onValue(
-        ref(db, "rooms/" + roomId + "/players"),
-        (snapshot) => {
-
-            const data = snapshot.val();
-
-            document.getElementById("players").innerHTML = "";
-
-            for(let id in data){
-
-                const div =
-                    document.createElement("div");
-
-                div.innerText =
-                    "👤 " + data[id].name;
-
-                document.getElementById("players")
-                    .appendChild(div);
-            }
-        }
-    );
+  });
 }
 
-/* TURN */
+/* ---------------- BACK ---------------- */
 
-window.nextTurn = function(){
+window.backLobby = function () {
 
-    const players =
-        document.querySelectorAll("#players div");
+  document.getElementById("gameScreen").style.display = "none";
+  document.getElementById("app").style.display = "block";
 
-    if(players.length === 0) return;
+  set(ref(db, "rooms/" + roomId + "/game"), null);
+};
 
-    const random =
-        Math.floor(Math.random() * players.length);
+/* ---------------- TURN SYSTEM ---------------- */
 
-    const selected =
-        players[random].innerText;
+window.nextTurn = function () {
 
-    set(
-        ref(db, "rooms/" + roomId + "/turn"),
-        selected
-    );
-}
+  const players = document.querySelectorAll("#players div");
 
-/* TURN LISTENER */
+  if (players.length === 0) return;
 
-onValue(
-    ref(db, "rooms"),
-    (snapshot) => {
+  const random = Math.floor(Math.random() * players.length);
 
-        if(!roomId) return;
+  const selected = players[random].innerText;
 
-        const data =
-            snapshot.val();
+  set(ref(db, "rooms/" + roomId + "/turn"), selected);
+};
 
-        if(!data[roomId]) return;
+function listenTurn() {
 
-        if(data[roomId].turn){
+  onValue(ref(db, "rooms/" + roomId + "/turn"), (snapshot) => {
 
-            document.getElementById("turn")
-                .innerText =
-                "🎯 Sıra: " + data[roomId].turn;
-        }
-    }
-);
-window.backLobby = function(){
+    const turn = snapshot.val();
 
-    document.getElementById("gameScreen").style.display = "none";
-    document.getElementById("app").style.display = "block";
+    if (!turn) return;
 
-    set(ref(db, "rooms/" + roomId + "/game"), null);
-}
-window.backLobby = function(){
-
-    document.getElementById("gameScreen").style.display = "none";
-    document.getElementById("app").style.display = "block";
-
-    set(ref(db, "rooms/" + roomId + "/game"), null);
+    const el = document.getElementById("turn");
+    if (el) el.innerText = "🎯 Sıra: " + turn;
+  });
 }
