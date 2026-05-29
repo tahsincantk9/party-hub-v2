@@ -16,7 +16,7 @@ const firebaseConfig = {
   authDomain:  "party-hub-90183.firebaseapp.com",
   databaseURL: "https://party-hub-90183-default-rtdb.europe-west1.firebasedatabase.app/" ,
   projectId: "party-hub-90183",
-  storageBucket: "party-hub-90183.appspot.com",,
+  storageBucket: "party-hub-90183.appspot.com",
   messagingSenderId:  "230836884321",
   appId: "1:230836884321:web:81b3eb36d650c18d0d6b20"
 
