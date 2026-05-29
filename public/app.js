@@ -61,6 +61,12 @@ window.joinRoom = function () {
   listenTurn();
 };
 
+if(game === "tabu"){
+
+    nextTabu();
+
+}
+
 /* ---------------- PLAYERS ---------------- */
 
 function listenPlayers() {
