@@ -26,6 +26,14 @@ const db = getDatabase(app);
 let roomId = "";
 let name = "";
 
+window.backLobby = function() {
+
+    document.getElementById("gameScreen").style.display = "none";
+    document.getElementById("app").style.display = "block";
+
+    set(ref(db, "rooms/" + roomId + "/game"), null);
+};
+
 /* ---------------- JOIN ---------------- */
 
 window.joinRoom = function () {
