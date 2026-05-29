@@ -82,6 +82,25 @@ window.joinRoom = function(){
         }
     }
 );
+
+window.selectGame = function(game){
+
+    set(ref(db, "rooms/" + roomId + "/game"), game);
+}
+  
+  onValue(ref(db, "rooms/" + roomId + "/game"), (snapshot) => {
+
+    const game = snapshot.val();
+
+    if(!game) return;
+
+    document.getElementById("login").style.display = "none";
+    document.getElementById("app").style.display = "none";
+    document.getElementById("gameScreen").style.display = "block";
+
+    document.getElementById("gameTitle").innerText = "🎮 " + game;
+    document.getElementById("gameContent").innerText = "Oyun başladı!";
+});
   
   /* OYUNCULARI DİNLE */
 
@@ -150,3 +169,17 @@ onValue(
         }
     }
 );
+window.backLobby = function(){
+
+    document.getElementById("gameScreen").style.display = "none";
+    document.getElementById("app").style.display = "block";
+
+    set(ref(db, "rooms/" + roomId + "/game"), null);
+}
+window.backLobby = function(){
+
+    document.getElementById("gameScreen").style.display = "none";
+    document.getElementById("app").style.display = "block";
+
+    set(ref(db, "rooms/" + roomId + "/game"), null);
+}
