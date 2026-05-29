@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Party Hub V2</title>
+
+<link rel="stylesheet" href="style.css">
+<script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+    <h1>🎮 PARTY HUB</h1>
+
+    <input id="roomId" placeholder="Oda Kodu (ABCD)">
+    <input id="name" placeholder="İsim">
+
+    <button onclick="joinRoom()">Giriş</button>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;">
+
+<header>
+    <h2>Party Hub</h2>
+</header>
+
+<main>
+
+<h3>🏠 Oda: <span id="roomShow"></span></h3>
+
+<h3>👥 Oyuncular</h3>
+<div id="players"></div>
+
+<hr>
+
+<h2 id="turn">Sıra bekleniyor...</h2>
+
+<button onclick="nextTurn()">➡ Sıradaki</button>
+
+</main>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

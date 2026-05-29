@@ -1,0 +1,44 @@
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0e0e0e;
+    color:white;
+}
+
+/* LOGIN */
+#login{
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+}
+
+input{
+    padding:10px;
+    border:none;
+    border-radius:10px;
+}
+
+/* APP */
+header{
+    padding:15px;
+    background:#111;
+}
+
+main{
+    padding:20px;
+}
+
+button{
+    padding:10px;
+    border:none;
+    border-radius:10px;
+    background:#00ff99;
+    cursor:pointer;
+}
+
+#players div{
+    padding:5px;
+}
