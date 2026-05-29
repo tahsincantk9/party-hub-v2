@@ -2,21 +2,92 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Party Hub</title>
+
+<link rel="stylesheet" href="./style.css">
+
 </head>
 
 <body>
 
-<h1>Oda Giriş</h1>
+<div id="login">
 
-<input id="roomId" placeholder="Room">
-<input id="name" placeholder="İsim">
+    <div class="card">
 
-<button onclick="joinRoom()">Giriş</button>
+        <h1>🎮 PARTY HUB</h1>
 
-<h2 id="status"></h2>
+        <input id="roomId" placeholder="Oda Kodu">
+        <input id="name" placeholder="İsmin">
 
-<!-- ⚡ ÖNEMLİ SIRALAMA -->
+        <button onclick="joinRoom()">Giriş Yap</button>
+
+        <h3 id="status"></h3>
+
+    </div>
+
+</div>
+
+<div id="app" style="display:none;">
+
+<header>
+
+    <h2>🎮 PARTY HUB</h2>
+
+    <div id="roomText"></div>
+
+</header>
+
+<div class="layout">
+
+    <!-- SOL -->
+    <div class="sidebar">
+
+        <h3>👥 Oyuncular</h3>
+
+        <div id="players"></div>
+
+    </div>
+
+    <!-- ORTA -->
+    <main>
+
+        <div class="mainCard">
+
+            <h1>🎉 Hoş Geldin</h1>
+
+            <p>Sağdaki panelden oyun seç 😎</p>
+
+            <button onclick="nextTurn()">
+                🎯 Sıradaki
+            </button>
+
+            <h2 id="turn"></h2>
+
+        </div>
+
+    </main>
+
+    <!-- SAĞ -->
+    <div class="games">
+
+        <h3>🎲 Oyunlar</h3>
+
+        <button>🧠 Tabu</button>
+        <button>😈 D/C</button>
+        <button>❓ Quiz</button>
+        <button>💣 Bomb</button>
+        <button>🎤 Şarkı</button>
+        <button>🔤 Zincir</button>
+        <button>🗳 Seçim</button>
+        <button>🎲 Görev</button>
+
+    </div>
+
+</div>
+
+</div>
+
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script src="./app.js"></script>
 
