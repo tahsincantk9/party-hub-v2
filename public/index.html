@@ -1,117 +1,90 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Party Hub</title>
+  <meta charset="UTF-8" />
+  <title>Party Hub</title>
 
-<link rel="stylesheet" href="./style.css">
+  <style>
+    body {
+      font-family: Arial;
+      background: #111;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
 
+    input {
+      padding: 10px;
+      margin: 5px;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    #players div {
+      margin: 5px;
+    }
+  </style>
 </head>
 
 <body>
 
-<div id="login">
+  <!-- 🔐 LOGIN -->
+  <div id="login">
+    <h2>Giriş</h2>
 
-    <div class="card">
-
-        <h1>🎮 PARTY HUB</h1>
-
-        <input id="roomId" placeholder="Oda Kodu">
-        <input id="name" placeholder="İsmin">
-
-        <button onclick="joinRoom()">Giriş Yap</button>
-
-        <h3 id="status"></h3>
-
-    </div>
-
-<div id="gameScreen" style="display:none; text-align:center;">
-
-    <h1 id="gameTitle">🧠 Tabu</h1>
-
-    <div id="timer">60</div>
-
-    <div id="gameContent"></div>
-
+    <input id="roomId" placeholder="Oda kodu">
+    <br>
+    <input id="name" placeholder="İsim">
     <br>
 
-    <button onclick="nextTabu()">
-        🎲 Yeni Kelime
-    </button>
+    <button onclick="joinRoom()">Giriş Yap</button>
+  </div>
 
-    <button onclick="backLobby()">
-        ⬅ Geri
-    </button>
+  <!-- 🏠 LOBBY -->
+  <div id="app" style="display:none;">
 
-</div>
+    <h2 id="roomText"></h2>
 
-</div>
+    <h3>Oyuncular</h3>
+    <div id="players"></div>
+
+    <hr>
+
+    <h3>Oyunlar</h3>
+
+    <button onclick="selectGame('tabu')">🧠 Tabu</button>
+    <button onclick="selectGame('dc')">😈 DC</button>
+
+    <br><br>
+
+    <button onclick="nextTurn()">🎯 Random Turn</button>
+
+    <h3 id="turn"></h3>
+
+  </div>
+
+  <!-- 🎮 GAME SCREEN -->
+  <div id="gameScreen" style="display:none;">
+
+    <h1 id="gameTitle"></h1>
+
+    <div id="timer" style="font-size:30px;"></div>
+
+    <div id="gameContent" style="margin:20px; font-size:24px;"></div>
+
+    <button onclick="nextTabu()">🎲 Yeni Kelime</button>
     <button onclick="backLobby()">⬅ Geri</button>
-</div>
-    
-</div>
 
-<div id="app" style="display:none;">
+  </div>
 
-<header>
+  <!-- JS -->
+  <script type="module" src="app.js"></script>
 
-    <h2>🎮 PARTY HUB</h2>
-
-    <div id="roomText"></div>
-
-</header>
-
-<div class="layout">
-
-    <!-- SOL -->
-    <div class="sidebar">
-
-        <h3>👥 Oyuncular</h3>
-
-        <div id="players"></div>
-
-    </div>
-
-    <!-- ORTA -->
-    <main>
-
-        <div class="mainCard">
-
-            <h1>🎉 Hoş Geldin</h1>
-
-            <p>Sağdaki panelden oyun seç 😎</p>
-
-            <button onclick="nextTurn()">
-                🎯 Sıradaki
-            </button>
-
-            <h2 id="turn"></h2>
-
-        </div>
-
-    </main>
-
-    <!-- SAĞ -->
-    <div class="games">
-
-        <h3>🎲 Oyunlar</h3>
-
-        <button onclick="selectGame('tabu')">🧠 Tabu</button>
-        <button onclick="selectGame('dc')">😈 D/C</button>
-        <button onclick="selectGame('quiz')">❓ Quiz</button>
-        <button onclick="selectGame('bomb')">💣 Bomb</button>
-        <button onclick="selectGame('song')">🎤 Şarkı</button>
-        <button onclick="selectGame('chain')">🔤 Zincir</button>
-
-    </div>
-
-</div>
-
-</div>
-
-<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-
-<script type="module" src="./app.js"></script>
 </body>
 </html>
