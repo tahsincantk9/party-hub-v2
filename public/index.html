@@ -36,15 +36,17 @@
 
   <!-- 🔐 LOGIN -->
   <div id="login">
-    <h2>Giriş</h2>
 
-    <input id="roomId" placeholder="Oda kodu">
-    <br>
-    <input id="name" placeholder="İsim">
-    <br>
+  <h1>🎮 Party Hub</h1>
 
-    <button onclick="joinRoom()">Giriş Yap</button>
-  </div>
+  <input id="roomId" placeholder="Oda Kodu">
+  <br>
+  <input id="name" placeholder="İsim">
+  <br>
+
+  <button onclick="joinRoom()">Giriş Yap</button>
+
+</div>
 
   <!-- 🏠 LOBBY -->
   <div id="app" style="display:none;">
@@ -78,8 +80,16 @@
 
     <div id="gameContent" style="margin:20px; font-size:24px;"></div>
 
-    <button onclick="nextTabu()">🎲 Yeni Kelime</button>
-    <button onclick="backLobby()">⬅ Geri</button>
+    <button onclick="selectGame('tabu')">🧠 Tabu</button>
+    <button onclick="selectGame('truth')">💬 Doğruluk</button>
+    <button onclick="selectGame('dare')">🔥 Cesaret</button>
+    <button onclick="selectGame('quiz')">❓ Quiz</button>
+    <button onclick="selectGame('who')">👀 Kim Bu?</button>
+    <button onclick="selectGame('never')">🚫 Never Have I Ever</button>
+    <button onclick="selectGame('word')">🔤 Kelime Zinciri</button>
+    <button onclick="selectGame('bomb')">💣 Bomba</button>
+    <button onclick="selectGame('draw')">🎨 Çiz & Tahmin</button>
+    <button onclick="selectGame('meme')">😂 Meme Battle</button>
 
   </div>
 
