@@ -23,6 +23,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+/* 🔥 TAKIM + SKOR */
+let teamA = 0;
+let teamB = 0;
+let currentTeam = "A";
+
 
 /* ---------------- STATE ---------------- */
 
