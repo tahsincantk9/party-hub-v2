@@ -1,5 +1,4 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
 import {
   getDatabase,
   ref,
@@ -8,7 +7,8 @@ import {
   set
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-/* FIREBASE CONFIG */
+/* ---------------- FIREBASE ---------------- */
+
 const firebaseConfig = {
   apiKey: "AIzaSyBZNpGv5Yk54JFB_5U6Qr6iNx2PaPrhIFo",
   authDomain:  "party-hub-90183.firebaseapp.com",
@@ -17,29 +17,23 @@ const firebaseConfig = {
   storageBucket:  "party-hub-90183.firebasestorage.app",
   messagingSenderId: "230836884321",
   appId: "1:230836884321:web:81b3eb36d650c18d0d6b20"
+  
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-/* STATE */
+/* ---------------- STATE ---------------- */
+
 let roomId = "";
 let name = "";
 
-window.backLobby = function() {
-
-    document.getElementById("gameScreen").style.display = "none";
-    document.getElementById("app").style.display = "block";
-
-    set(ref(db, "rooms/" + roomId + "/game"), null);
-};
-
-/* ---------------- JOIN ---------------- */
+/* ---------------- JOIN ROOM ---------------- */
 
 window.joinRoom = function () {
 
-  roomId = document.getElementById("roomId").value;
-  name = document.getElementById("name").value;
+  roomId = document.getElementById("roomId").value.trim();
+  name = document.getElementById("name").value.trim();
 
   if (!roomId || !name) {
     alert("Eksik bilgi");
@@ -51,22 +45,19 @@ window.joinRoom = function () {
 
   document.getElementById("roomText").innerText = "🏠 Oda: " + roomId;
 
-  /* PLAYER EKLE */
   push(ref(db, "rooms/" + roomId + "/players"), {
     name: name
   });
 
   listenPlayers();
-  listenGame(if(game === "tabu"){
-    nextTabu();
-});
+  listenGame();
   listenTurn();
 };
-
 
 /* ---------------- PLAYERS ---------------- */
 
 function listenPlayers() {
+
   onValue(ref(db, "rooms/" + roomId + "/players"), (snapshot) => {
 
     const data = snapshot.val();
@@ -90,14 +81,9 @@ function listenPlayers() {
 
 window.selectGame = function (game) {
 
-  console.log("GAME SEÇİLDİ:", game);
+  if (!roomId) return;
 
-    if(!roomId){
-        console.log("roomId yok!");
-        return;
-    }
-
-    set(ref(db, "rooms/" + roomId + "/game"), game);
+  set(ref(db, "rooms/" + roomId + "/game"), game);
 };
 
 /* ---------------- GAME LISTENER ---------------- */
@@ -110,16 +96,19 @@ function listenGame() {
 
     if (!game) return;
 
-    document.getElementById("gameTitle").innerText = "🎮 " + game;
-
     document.getElementById("login").style.display = "none";
     document.getElementById("app").style.display = "none";
     document.getElementById("gameScreen").style.display = "block";
 
+    document.getElementById("gameTitle").innerText = "🎮 " + game;
+
+    if (game === "tabu") {
+      nextTabu();
+    }
   });
 }
 
-/* ---------------- BACK ---------------- */
+/* ---------------- BACK LOBBY ---------------- */
 
 window.backLobby = function () {
 
@@ -128,6 +117,61 @@ window.backLobby = function () {
 
   set(ref(db, "rooms/" + roomId + "/game"), null);
 };
+
+/* ---------------- TABU DATA ---------------- */
+
+const tabuWords = [
+  { word:"Araba", taboo:["motor","teker","sürmek"] },
+  { word:"Telefon", taboo:["arama","mesaj","ekran"] },
+  { word:"Futbol", taboo:["top","gol","hakem"] },
+  { word:"Pizza", taboo:["peynir","hamur","dilim"] },
+  { word:"Kitap", taboo:["okumak","sayfa","yazar"] },
+  { word:"Kedi", taboo:["miyav","pati","evcil"] },
+  { word:"Köpek", taboo:["havlamak","tasma","evcil"] },
+  { word:"Uçak", taboo:["pilot","kanat","uçmak"] }
+];
+
+/* ---------------- TABU ---------------- */
+
+window.nextTabu = function () {
+
+  const random =
+    tabuWords[Math.floor(Math.random() * tabuWords.length)];
+
+  document.getElementById("gameContent").innerHTML = `
+    <h2>${random.word}</h2>
+    <p>❌ ${random.taboo.join(" • ")}</p>
+  `;
+
+  startTimer();
+};
+
+/* ---------------- TIMER ---------------- */
+
+let timer;
+
+function startTimer() {
+
+  let time = 60;
+
+  clearInterval(timer);
+
+  document.getElementById("timer").innerText = time;
+
+  timer = setInterval(() => {
+
+    time--;
+
+    document.getElementById("timer").innerText = time;
+
+    if (time <= 0) {
+
+      clearInterval(timer);
+      alert("⏰ Süre Bitti!");
+    }
+
+  }, 1000);
+}
 
 /* ---------------- TURN SYSTEM ---------------- */
 
@@ -144,45 +188,6 @@ window.nextTurn = function () {
   set(ref(db, "rooms/" + roomId + "/turn"), selected);
 };
 
-window.nextTabu = function(){
-
-    const random =
-        tabuWords[Math.floor(Math.random() * tabuWords.length)];
-
-    document.getElementById("gameContent").innerHTML = `
-        <h2>${random.word}</h2>
-        <p>❌ ${random.taboo.join(" • ")}</p>
-    `;
-
-    startTimer();
-}
-
-let timer;
-
-function startTimer(){
-
-    let time = 60;
-
-    clearInterval(timer);
-
-    document.getElementById("timer").innerText = time;
-
-    timer = setInterval(() => {
-
-        time--;
-
-        document.getElementById("timer").innerText = time;
-
-        if(time <= 0){
-
-            clearInterval(timer);
-
-            alert("⏰ Süre Bitti!");
-        }
-
-    },1000);
-}
-
 function listenTurn() {
 
   onValue(ref(db, "rooms/" + roomId + "/turn"), (snapshot) => {
@@ -192,6 +197,7 @@ function listenTurn() {
     if (!turn) return;
 
     const el = document.getElementById("turn");
+
     if (el) el.innerText = "🎯 Sıra: " + turn;
   });
 }
