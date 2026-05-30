@@ -117,6 +117,32 @@ function listenGame() {
   });
 }
 
+let teamA = 0;
+let teamB = 0;
+let currentTeam = "A";
+
+function correct() {
+
+  if (currentTeam === "A") teamA++;
+  else teamB++;
+
+  nextTabu(); 
+  function switchTeam() {
+  currentTeam = currentTeam === "A" ? "B" : "A";
+
+  document.getElementById("score").innerText =
+    `A: ${teamA} | B: ${teamB} | Sıra: ${currentTeam}`;
+}
+}
+
+function wrong() {
+  nextTabu();
+}
+
+function skip() {
+  nextTabu();
+}
+
 /* ---------------- BACK LOBBY ---------------- */
 
 window.backLobby = function () {
