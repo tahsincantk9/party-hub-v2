@@ -23,10 +23,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+
 /* ---------------- STATE ---------------- */
 
 let roomId = "";
 let name = "";
+
+/* 🔥 TABU HAFIZA */
+const usedTabu = new Set();
 
 /* ---------------- JOIN ROOM ---------------- */
 
@@ -135,8 +139,18 @@ const tabuWords = [
 
 window.nextTabu = function () {
 
-  const random =
-    tabuWords[Math.floor(Math.random() * tabuWords.length)];
+  // 🔥 TÜM KELİMELER BİTTİYSE RESET
+  if (usedTabu.size === tabuWords.length) {
+    usedTabu.clear();
+  }
+
+  let random;
+
+  do {
+    random = tabuWords[Math.floor(Math.random() * tabuWords.length)];
+  } while (usedTabu.has(random.word));
+
+  usedTabu.add(random.word);
 
   document.getElementById("gameContent").innerHTML = `
     <h2>${random.word}</h2>
